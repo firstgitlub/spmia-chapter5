@@ -61,10 +61,21 @@
             <artifactId>spring-cloud-config-client</artifactId>
         </dependency>
 
+
+        <!-- 告诉maven 去拉取spring cloud Hystrix依赖项 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-hystrix</artifactId>
         </dependency>
+        <!-- 告诉maven 去拉取 Netflix Hystrix库
+        这里重新指定版本是为了解决-->
+        <dependency>
+            <groupId>com.netflix.hystrix</groupId>
+            <artifactId>hystrix-javanica</artifactId>
+            <version>1.5.9</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -81,11 +92,7 @@
             <artifactId>spring-security-rsa</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.netflix.hystrix</groupId>
-            <artifactId>hystrix-javanica</artifactId>
-            <version>1.5.9</version>
-        </dependency>
+
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -13,9 +13,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 
+// 扩展基本的 Hystrix ConcurrencyStrategy类
 public class ThreadLocalAwareStrategy extends HystrixConcurrencyStrategy{
     private HystrixConcurrencyStrategy existingConcurrencyStrategy;
 
+    // spring cloud 已经定义了一个并发类 将以存在的并发策略传入自定义的HystrixConcurrencyStrategy
+    // 的类构造器中
     public ThreadLocalAwareStrategy(
             HystrixConcurrencyStrategy existingConcurrencyStrategy) {
         this.existingConcurrencyStrategy = existingConcurrencyStrategy;
@@ -28,6 +31,7 @@ public class ThreadLocalAwareStrategy extends HystrixConcurrencyStrategy{
                 : super.getBlockingQueue(maxQueueSize);
     }
 
+    // 有几个方法需要重写 要么调用existingConcurrencyStrategy 方法实现 要么调用基类 HystrixConcurrencyStrategy
     @Override
     public <T> HystrixRequestVariable<T> getRequestVariable(
             HystrixRequestVariableLifecycle<T> rv) {
@@ -53,7 +57,9 @@ public class ThreadLocalAwareStrategy extends HystrixConcurrencyStrategy{
     public <T> Callable<T> wrapCallable(Callable<T> callable) {
         return existingConcurrencyStrategy != null
                 ? existingConcurrencyStrategy
-                .wrapCallable(new DelegatingUserContextCallable<T>(callable, UserContextHolder.getContext()))
+                // 注入Callable实现 它将设置UserContext
+                .wrapCallable(new DelegatingUserContextCallable<T>(callable,
+                    UserContextHolder.getContext()))
                 : super.wrapCallable(new DelegatingUserContextCallable<T>(callable, UserContextHolder.getContext()));
     }
 }

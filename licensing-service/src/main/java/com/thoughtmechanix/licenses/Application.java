@@ -10,8 +10,12 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EnableCircuitBreaker
+// 告诉 spring cloud 将要为服务使用 Hystrix
+@EnableCircuitBreaker // 标注使用断路器的注解 断路器的完整功能是需要 调用者 与 服务者 共同配合才能完成的
+// 但是里面的原理性知识 还是需要弄明白的
 public class Application {
+
+    // 支持负载均衡
     @LoadBalanced
     @Bean
     public RestTemplate restTemplate() {
